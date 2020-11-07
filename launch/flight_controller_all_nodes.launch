@@ -1,0 +1,10 @@
+<launch> 
+  <node pkg="flight_controller" type="global2inertial_node" 
+  name="global2inertial_node" output="screen"/> 
+  <node pkg="flight_controller" type="providers_node" 
+  name="providers_node" output="screen"/> 
+  <node pkg="flight_controller" type="waypoint_reference_node" 
+  name="waypoint_reference_node" output="screen"/> 
+  <node pkg="flight_controller" type="flight_controller" 
+  name="flight_controller" output="screen"/> 
+</launch> 

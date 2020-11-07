@@ -1,0 +1,5 @@
+<launch> 
+  <node pkg="flight_controller" type="flight_controller" 
+  name="flight_controller" output="screen" 
+  launch-prefix="valgrind"/> 
+</launch> 

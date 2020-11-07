@@ -1,0 +1,8 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/pedrohrpbs/catkin_ws_HEAR/devel/lib/python2.7/dist-packages",
+        "/home/pedrohrpbs/catkin_ws_tensorflow/devel/lib/python2.7/dist-packages",
+        "/home/pedrohrpbs/catkin_ws_NAVIO/devel/lib/python2.7/dist-packages",
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ]
+}
