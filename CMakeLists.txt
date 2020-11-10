@@ -24,8 +24,8 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
-add_executable(example_node example_node/example_node.cpp)
-target_link_libraries(example_node ${catkin_LIBRARIES})
+add_executable(example_flight_controller_node example_node/example_node.cpp)
+target_link_libraries(example_flight_controller_node ${catkin_LIBRARIES})
 
 add_executable(global2inertial_node global2inertial_node/global2inertial_node.cpp)
 target_link_libraries(global2inertial_node ${catkin_LIBRARIES})

@@ -35,6 +35,7 @@
 
 #define XSENS_OVER_ROS
 #define OPTITRACK
+#define BIG_HEXA
 #undef BATTERY_MONITOR
 
 const int PWM_FREQUENCY = 200;
@@ -58,7 +59,7 @@ int main(int argc, char** argv) {
                                                             ROSUnit_msg_type::ROSUnit_Bool,
                                                             "arm");
     ROSUnit* myROSResetController = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
-                                                                        ROSUnit_msg_type::ROSUnit_Int,
+                                                                        ROSUnit_msg_type::ROSUnit_Int8,
                                                                         "reset_controller");
     ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
@@ -123,6 +124,9 @@ int main(int argc, char** argv) {
     std::vector<Actuator*> actuators{M1, M2, M3, M4, M5, M6};
 
     ActuationSystem* myActuationSystem = new HexaActuationSystem(actuators);
+    #ifdef BIG_HEXA
+    myActuationSystem->setESCValues(1165 ,1000, 2000);
+    #endif
     // ActuationSystem* myActuationSystem = new QuadActuationSystem(actuators);
 
     // //***********************************SETTING CONNECTIONS***********************************
