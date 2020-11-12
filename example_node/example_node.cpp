@@ -59,8 +59,8 @@ int main(int argc, char** argv) {
                                                             ROSUnit_msg_type::ROSUnit_Bool,
                                                             "arm");
     ROSUnit* myROSResetController = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
-                                                                        ROSUnit_msg_type::ROSUnit_Int8,
-                                                                        "reset_controller");
+                                                                      ROSUnit_msg_type::ROSUnit_Int8,
+                                                                      "reset_controller");
     ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/x");
