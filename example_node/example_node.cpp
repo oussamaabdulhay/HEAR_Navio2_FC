@@ -18,6 +18,7 @@
 #include "HEAR_math/Sum.hpp"
 #include "HEAR_math/Saturation.hpp"
 #include "HEAR_math/ConstantFloat.hpp"
+#include "HEAR_math/KalmanFilter.hpp"
 #include "HEAR_control/PIDController.hpp"
 #include "HEAR_control/MRFTController.hpp"
 #include "HEAR_control/BoundingBoxController.hpp"
