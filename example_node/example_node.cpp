@@ -365,7 +365,7 @@ int main(int argc, char** argv) {
     error_mux_z->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
-    PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(error->getPorts()[(int)ROSUnit_Point2DPub::ports_id::IP_0]);
+    PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(error->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
     PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::IP_0_DATA]);
 
@@ -377,7 +377,7 @@ int main(int argc, char** argv) {
 
     // Rotation Matrix
     PID_Camera_BLOCK_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
-    PID_Optitrack_BLOCK_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
+    PID_Optitrack_BLOCK_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
     MRFT_BLOCK_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
 
     //*******************************************************************************************************************
