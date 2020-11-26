@@ -131,7 +131,7 @@ int main(int argc, char** argv) {
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "waypoint_reference/yaw");
     ROSUnit* error = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
                                                                     "error/z");                                                               
 
     //**************************SETTING BLOCKS**********************************
@@ -348,7 +348,7 @@ int main(int argc, char** argv) {
     constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_0_DATA]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
 
     rosunit_z_provider->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    rosunit_z_provider->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(error->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+    rosunit_z_provider->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(error->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     rosunit_z_camera_provider_sub->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     rosunit_z_camera_provider_sub->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
 
