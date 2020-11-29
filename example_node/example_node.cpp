@@ -129,7 +129,7 @@ int main(int argc, char** argv) {
                                                                     "waypoint_reference/yaw");
     ROSUnit* error = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "error/z");                                                               
+                                                                    "error_z/z");                                                               
 
     //**************************SETTING BLOCKS**********************************
     Block* PID_x = new PIDController(block_id::PID_X);
