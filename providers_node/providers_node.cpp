@@ -18,7 +18,7 @@
 #include "HEAR_math/ButterFilter_2nd.hpp"
 #include "HEAR_math/KalmanFilter.hpp"
 #include "HEAR_math/InverseRotateVec.hpp"
-#include "HEAR_core/InvertedSwitch.hpp"
+
 
 const int OPTITRACK_FREQUENCY = 120;
 const int CAMERA_FREQUENCY = 120;
