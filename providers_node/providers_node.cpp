@@ -55,7 +55,7 @@ int main(int argc, char **argv){
     ROSUnit* rosunit_z_camera_provider_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/camera/z");
-    ROSUnit* z_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    ROSUnit* rosunit_z_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "/KalmanFilter/optitrack/z");
     ROSUnit* myCameraPosition =  ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
@@ -137,7 +137,7 @@ int main(int argc, char **argv){
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(mux_provider_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
     rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_2_DATA]->connect(z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
-    z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_VEL]->connect(z_KalmanFilter->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_VEL]->connect(rosunit_z_KalmanFilter->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
  
 
 
