@@ -124,8 +124,6 @@ int main(int argc, char **argv){
 
     InverseRotateVec* rotation_IMU = new InverseRotateVec();
 
-    InvertedSwitch* pos_switch_y = new InvertedSwitch(std::greater_equal<float>(), 2.0);
-    InvertedSwitch* pos_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
 
     rosunit_g2i_position->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
     rosunit_g2i_orientation->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect(ori_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
