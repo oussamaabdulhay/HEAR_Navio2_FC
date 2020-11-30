@@ -55,21 +55,21 @@ int main(int argc, char **argv){
     ROSUnit* rosunit_z_camera_provider_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/camera/z");
-    ROSUnit* x_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/KalmanFilter/optitrack/x");
-    ROSUnit* y_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/KalmanFilter/optitrack/y");
-    ROSUnit* rosunit_camera_y_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/KalmanFilter/camera/y");
+    // ROSUnit* x_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "/KalmanFilter/optitrack/x");
+    // ROSUnit* y_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "/KalmanFilter/optitrack/y");
+    // ROSUnit* rosunit_camera_y_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "/KalmanFilter/camera/y");
     ROSUnit* z_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "/KalmanFilter/optitrack/z");
-    ROSUnit* rosunit_camera_z_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/KalmanFilter/camera/z");
+    // ROSUnit* rosunit_camera_z_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "/KalmanFilter/camera/z");
     ROSUnit* myCameraPosition =  ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "camera_provider");
@@ -100,11 +100,11 @@ int main(int argc, char **argv){
     Demux3D* ori_demux = new Demux3D();
     Demux3D* rotated_IMU_demux = new Demux3D();
 
-    KalmanFilter* x_kalmanFilter= new KalmanFilter(1);
-    KalmanFilter* y_kalmanFilter= new KalmanFilter(1);
+    // KalmanFilter* x_kalmanFilter= new KalmanFilter(1);
+    // KalmanFilter* y_kalmanFilter= new KalmanFilter(1);
     KalmanFilter* z_kalmanFilter= new KalmanFilter(1);
-    KalmanFilter* camera_y_kalmanFilter= new KalmanFilter(1);
-    KalmanFilter* camera_z_kalmanFilter= new KalmanFilter(1);
+    // KalmanFilter* camera_y_kalmanFilter= new KalmanFilter(1);
+    // KalmanFilter* camera_z_kalmanFilter= new KalmanFilter(1);
 
     WrapAroundFunction* wrap_around_yaw = new WrapAroundFunction(-M_PI, M_PI);
     
