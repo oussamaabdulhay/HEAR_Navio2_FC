@@ -138,10 +138,10 @@ int main(int argc, char **argv){
     optitrack_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(((Block*)filter_x_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
     ((Block*)filter_x_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::OP_0_DATA]->connect(mux_provider_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(mux_provider_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-    //pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
-    //rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_0_DATA]->connect(x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
+    pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
+    rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_0_DATA]->connect(x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_0_DATA]->connect(accelometer_rotated_x->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    //x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_VEL]->connect(rosunit_x_KalmanFilter->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_VEL]->connect(rosunit_x_KalmanFilter->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
    
 
     //Y Provider & KALMAN FILTER OPTITRACK Y
