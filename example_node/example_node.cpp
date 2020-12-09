@@ -229,7 +229,7 @@ int main(int argc, char** argv) {
     Switch* PID_MRFT_switch_y = new Switch(std::greater_equal<float>(), 2.0);
     Switch* Translation_camera_switch_y = new Switch(std::greater_equal<float>(), 2.0);
     Switch* MRFT_BLOCK_switch_y = new Switch(std::greater_equal<float>(), 2.0);
-    Switch* PID_Optitrack_BLOCK_switch_y = new Switch(std::greater_equal<float>(), 2.0);
+    Switch* PID_Optitrack_BLOCK_switch_y = new Switch(std::less_equal<float>(), 2.0);
     Switch* PID_Camera_BLOCK_switch_y = new Switch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* reference_switch_y = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* provider_switch_y = new InvertedSwitch(std::greater_equal<float>(), 2.0);
@@ -315,7 +315,7 @@ int main(int argc, char** argv) {
     Switch* PID_MRFT_switch_z = new Switch(std::greater_equal<float>(), 2.0);
     Switch* Translation_camera_switch_z = new Switch(std::greater_equal<float>(), 2.0);
     Switch* MRFT_BLOCK_switch_z = new Switch(std::greater_equal<float>(), 2.0);
-    Switch* PID_Optitrack_BLOCK_switch_z = new Switch(std::greater_equal<float>(), 2.0);
+    Switch* PID_Optitrack_BLOCK_switch_z = new Switch(std::less_equal<float>(), 2.0);
     Switch* PID_Camera_BLOCK_switch_z = new Switch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* reference_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* provider_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
