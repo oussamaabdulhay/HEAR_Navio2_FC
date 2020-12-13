@@ -60,7 +60,7 @@ int main(int argc, char** argv) {
 
     ROSUnit* myROSArm = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                             ROSUnit_msg_type::ROSUnit_Bool,
-                                                            "arm");
+                                                            "arm"); 
     ROSUnit* myROSResetController = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                                       ROSUnit_msg_type::ROSUnit_Int8,
                                                                       "reset_controller");
@@ -73,9 +73,6 @@ int main(int argc, char** argv) {
     ROSUnit* ros_camera_pid_switch_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                                       ROSUnit_msg_type::ROSUnit_Float,
                                                                       "camera_pid_switch_y");
-    // ROSUnit* ros_camera_reference_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
-    //                                                                   ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                   "waypoint_reference/camera/y");
     ROSUnit* ros_pid_switch_z_optitrack = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                                       ROSUnit_msg_type::ROSUnit_Float,
                                                                       "pid_switch_z");
@@ -85,9 +82,6 @@ int main(int argc, char** argv) {
     ROSUnit* ros_camera_pid_switch_z = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                                       ROSUnit_msg_type::ROSUnit_Float,
                                                                       "camera_pid_switch_z");
-    // ROSUnit* ros_camera_reference_z = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
-    //                                                                   ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                   "waypoint_reference/camera/z");
     ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/x");
@@ -257,9 +251,9 @@ int main(int argc, char** argv) {
     rosunit_waypoint_y->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_0_DATA]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
 
-    rosunit_y_provider->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    rosunit_y_camera_provider_sub->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_2]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    rosunit_y_camera_provider_sub->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_2]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
+    rosunit_y_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    rosunit_y_camera_provider_sub->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    rosunit_y_camera_provider_sub->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
 
     
     provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(prov_demux_y->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
@@ -344,9 +338,9 @@ int main(int argc, char** argv) {
     rosunit_waypoint_z->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_2]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_0_DATA]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
 
-    rosunit_z_provider->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_3]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    rosunit_z_camera_provider_sub->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_4]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    rosunit_z_camera_provider_sub->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_4]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
+    rosunit_z_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_3]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    rosunit_z_camera_provider_sub->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_4]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    rosunit_z_camera_provider_sub->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_4]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
 
 
     
