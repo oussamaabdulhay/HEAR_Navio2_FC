@@ -121,12 +121,12 @@ int main(int argc, char** argv) {
     ROSUnit* rosunit_waypoint_yaw = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "waypoint_reference/yaw");
-    ROSUnit* check_output1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "output_provider/pid");
-    ROSUnit* check_output2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "output_provider/mrft");                                                                 
+    // ROSUnit* check_output1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "output_provider/pid");
+    // ROSUnit* check_output2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "output_provider/mrft");                                                                 
 
     //**************************SETTING BLOCKS**********************************
     Block* PID_x = new PIDController(block_id::PID_X);
