@@ -316,8 +316,8 @@ int main(int argc, char** argv) {
     Mux3D* error_mux_z = new Mux3D();
     ConstantFloat* constant_reference_z=new ConstantFloat(1);
 
-    ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
-    ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
+    ros_optitrack_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
+    ros_optitrack_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
 
     ros_camera_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_4]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
     ros_camera_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_4]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
