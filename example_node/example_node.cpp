@@ -361,7 +361,7 @@ int main(int argc, char** argv) {
     PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::IP_0_DATA]);
     
     ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
-    zero_constant->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    zero_constant->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     ((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::OP_0_DATA]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(controller_sum->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
     
