@@ -363,13 +363,17 @@ int main(int argc, char** argv) {
     ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
     zero_constant->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     ((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::OP_0_DATA]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(controller_sum->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
+    controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(controller_sum->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
+    
+    //Logger
     ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(check_output1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     ((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::OP_0_DATA]->connect(check_output2->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     // Rotation Matrix
     //((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
     controller_sum->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
+    
+    //Logger
     controller_sum->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(check_output3->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
       
