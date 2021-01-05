@@ -49,30 +49,12 @@ int main(int argc, char **argv){
     ROSUnit* rosunit_yaw_rate_provider_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/yaw_rate");
-    // ROSUnit* rosunit_x_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                 "/KalmanFilter/optitrack/x");
     ROSUnit* rosunit_y_camera_provider_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/camera/y");
-    // ROSUnit* rosunit_y_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                 "/KalmanFilter/optitrack/y");
-    // ROSUnit* accelometer_rotated_x = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                 "/Rotated_Acceleration/x");
-    // ROSUnit* accelometer_rotated_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                 "/Rotated_Acceleration/y");
-    // ROSUnit* accelometer_rotated_z = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                 "//Rotated_Acceleration/z");
     ROSUnit* rosunit_z_camera_provider_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/camera/z");
-    // ROSUnit* rosunit_z_KalmanFilter = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                 "/KalmanFilter/optitrack/z");
     ROSUnit* myCameraPosition =  ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "camera_provider");
@@ -161,7 +143,7 @@ int main(int argc, char **argv){
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
     rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_1_DATA]->connect(camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_VEL]->connect(mux_camera_provider_y->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
-   
+       
     //Z Provider 
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(optitrack_z_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
     optitrack_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(((Block*)filter_z_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
