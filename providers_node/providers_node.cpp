@@ -158,9 +158,9 @@ int main(int argc, char **argv){
     
     //CAMERA Y PROVIDER WITH KALMAN FILTER
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(mux_camera_provider_y->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
-    rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_1_DATA]->connect(camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
-    camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_VEL]->connect(mux_camera_provider_y->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
+    // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
+    // rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_1_DATA]->connect(camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
+    // camera_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_VEL]->connect(mux_camera_provider_y->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
    
     //Z Provider 
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(optitrack_z_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
