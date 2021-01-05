@@ -230,26 +230,34 @@ int main(int argc, char** argv) {
     Switch* Translation_camera_switch_y = new Switch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* reference_switch_y = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* provider_switch_y = new InvertedSwitch(std::greater_equal<float>(), 2.0);
+    InvertedSwitch* controller_sum_switch_y = new InvertedSwitch(std::greater_equal<float>(), 2.0);
+    InvertedSwitch* actuation_switch_y = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     Sum* sum_ref_y = new Sum(std::minus<float>());
     Sum* sum_ref_dot_y = new Sum(std::minus<float>());
     Sum* sum_ref_dot_dot_y = new Sum(std::minus<float>());
+    Sum* controller_sum_y = new Sum(std::plus<float>());
+    Sum* controller_sum_camera_y = new Sum(std::plus<float>());
     Demux3D* prov_demux_y = new Demux3D();
     Mux3D* error_mux_y = new Mux3D();
     ConstantFloat* constant_reference_y=new ConstantFloat(0);
+    ConstantFloat* zero_constant_y=new ConstantFloat(0);
 
     ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(PID_MRFT_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
     ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
     ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(controller_sum_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
 
     ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(PID_MRFT_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
-    ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
+    ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(controller_sum_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
 
-    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
-    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(Translation_camera_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(actuation_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     
     rosunit_waypoint_y->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
@@ -274,11 +282,14 @@ int main(int argc, char** argv) {
     PID_MRFT_switch_y->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_y)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_y->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((MRFTController*)MRFT_y)->getPorts()[(int)MRFTController::ports_id::IP_0_DATA]);
 
+    
+    ((PIDController*)PID_y)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    ((MRFTController*)MRFT_y)->getPorts()[(int)MRFTController::ports_id::OP_0_DATA]->connect(controller_sum_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
 
     // Rotation Matrix
-    ((PIDController*)PID_y_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(inertialToBody_RotMat->getPorts()[(int)Transform_InertialToBody::ports_id::IP_1_Y]);
-    ((PIDController*)PID_y)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(inertialToBody_RotMat->getPorts()[(int)Transform_InertialToBody::ports_id::IP_1_Y]);
-    ((MRFTController*)MRFT_y)->getPorts()[(int)MRFTController::ports_id::OP_0_DATA]->connect(inertialToBody_RotMat->getPorts()[(int)Transform_InertialToBody::ports_id::IP_1_Y]);
+    ((PIDController*)PID_y_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(actuation_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    controller_sum_switch_y->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(actuation_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    actuation_switch_y->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(inertialToBody_RotMat->getPorts()[(int)Transform_InertialToBody::ports_id::IP_1_Y]);
       
 
     
@@ -312,35 +323,35 @@ int main(int argc, char** argv) {
     Switch* Translation_camera_switch_z = new Switch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* reference_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* provider_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
-    InvertedSwitch* controller_sum_switch = new InvertedSwitch(std::greater_equal<float>(), 2.0);
-    InvertedSwitch* actuation_switch = new InvertedSwitch(std::greater_equal<float>(), 2.0);
+    InvertedSwitch* controller_sum_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
+    InvertedSwitch* actuation_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     Sum* sum_ref_z = new Sum(std::minus<float>());
     Sum* sum_ref_dot_z = new Sum(std::minus<float>());
     Sum* sum_ref_dot_dot_z = new Sum(std::minus<float>());
-    Sum* controller_sum = new Sum(std::plus<float>());
-    Sum* controller_sum_camera = new Sum(std::plus<float>());
+    Sum* controller_sum_z = new Sum(std::plus<float>());
+    Sum* controller_sum_camera_z = new Sum(std::plus<float>());
     Demux3D* prov_demux_z = new Demux3D();
     Mux3D* error_mux_z = new Mux3D();
     ConstantFloat* constant_reference_z=new ConstantFloat(0);
-    ConstantFloat* zero_constant=new ConstantFloat(0);
+    ConstantFloat* zero_constant_z=new ConstantFloat(0);
 
     ros_optitrack_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
     ros_optitrack_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
     ros_optitrack_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_optitrack_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_optitrack_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(controller_sum_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     
     ros_camera_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_4]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
     ros_camera_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_4]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
     ros_camera_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_4]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_camera_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_4]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_4]->connect(controller_sum_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_4]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
    
     ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(controller_sum_camera->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(controller_sum_camera_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(actuation_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     
        
     rosunit_waypoint_z->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_2]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
@@ -369,15 +380,15 @@ int main(int argc, char** argv) {
     PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::IP_0_DATA]);
     
     //SUMMING THE PD OUTPUT WITH MRFT OUTPUT
-    ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
-    zero_constant->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    ((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::OP_0_DATA]->connect(controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    controller_sum_switch->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(controller_sum->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
+    ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_z->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
+    zero_constant_z->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(controller_sum_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    ((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::OP_0_DATA]->connect(controller_sum_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    controller_sum_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(controller_sum_z->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
     
     //SUMMING THE PD OUTPUT WITH CAMERA PD OUTPUT
   
-    ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
-    ((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
+    ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_z->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
+    ((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_z->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
 
 
     // //Logger
@@ -385,9 +396,9 @@ int main(int argc, char** argv) {
     // ((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::OP_0_DATA]->connect(check_output2->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     // Rotation Matrix
-    controller_sum_camera->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    controller_sum->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    actuation_switch->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
+    controller_sum_camera_z->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    controller_sum_z->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
     
     // //Logger
     // controller_sum->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(check_output3->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
@@ -445,9 +456,8 @@ int main(int argc, char** argv) {
     
     // ROS CONTROL OUTPUTS
     X_Saturation->getPorts()[(int)Saturation::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_0_X_OUTPUT]);
-    Y_Saturation->getPorts()[(int)Saturation::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_1_Y_OUTPUT]);
-    MRFT_y->getPorts()[(int)Saturation::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_1_Y_OUTPUT]);
-    controller_sum->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_2_Z_OUTPUT]);
+    actuation_switch_y->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_1_Y_OUTPUT]);
+    actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_2_Z_OUTPUT]);
     PID_roll->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_3_ROLL_OUTPUT]);
     PID_pitch->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_4_PITCH_OUTPUT]);
     Yaw_Saturation->getPorts()[(int)Saturation::ports_id::OP_0_DATA]->connect(((Block*)myROSBroadcastData)->getPorts()[(int)ROSUnit_BroadcastData::ports_id::IP_5_YAW_OUTPUT]);
@@ -467,7 +477,9 @@ int main(int argc, char** argv) {
     ((Block*)myROSResetController)->getPorts()[(int)ROSUnit_SetIntSrv::ports_id::OP_0]->connect(PID_x->getPorts()[(int)PIDController::ports_id::IP_2_RESET]);
     ((Block*)myROSResetController)->getPorts()[(int)ROSUnit_SetIntSrv::ports_id::OP_0]->connect(PID_y->getPorts()[(int)PIDController::ports_id::IP_2_RESET]);
     ((Block*)myROSResetController)->getPorts()[(int)ROSUnit_SetIntSrv::ports_id::OP_0]->connect(PID_z->getPorts()[(int)PIDController::ports_id::IP_2_RESET]);
-    //((Block*)myROSResetController)->getPorts()[(int)ROSUnit_SetIntSrv::ports_id::OP_0]->connect(PID_z_identification->getPorts()[(int)PIDController::ports_id::IP_2_RESET]);
+    ((Block*)myROSResetController)->getPorts()[(int)ROSUnit_SetIntSrv::ports_id::OP_0]->connect(PID_y_camera->getPorts()[(int)PIDController::ports_id::IP_2_RESET]);
+    ((Block*)myROSResetController)->getPorts()[(int)ROSUnit_SetIntSrv::ports_id::OP_0]->connect(PID_z_camera->getPorts()[(int)PIDController::ports_id::IP_2_RESET]);
+
 
     ((Block*)myROSResetController)->getPorts()[(int)ROSUnit_SetIntSrv::ports_id::OP_0]->connect(PID_roll->getPorts()[(int)PIDController::ports_id::IP_2_RESET]);
     ((Block*)myROSResetController)->getPorts()[(int)ROSUnit_SetIntSrv::ports_id::OP_0]->connect(PID_pitch->getPorts()[(int)PIDController::ports_id::IP_2_RESET]);
