@@ -86,6 +86,15 @@ int main(int argc, char **argv){
     ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/rotated_accelerometer");
+    ROSUnit* bias_x = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "/Kalman_bias/x");
+    ROSUnit* bias_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "/Kalman_bias/y");
+    ROSUnit* bias_z = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "/Kalman_bias/z");
     //***********************ADDING SENSORS********************************
     ROSUnit* myROSUnit_Xsens = new ROSUnit_IMU(nh);
     //***********************SETTING PROVIDERS**********************************
@@ -167,18 +176,21 @@ int main(int argc, char **argv){
     rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_0_DATA]->connect(optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
+    optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_2_BIAS]->connect(bias_x->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     //y Provider with kalmna filter
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
     rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_1_DATA]->connect(optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_y->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_y->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
+    optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_2_BIAS]->connect(bias_y->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     //z Provider with kalmna filter
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
     rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_2_DATA]->connect(optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
+    optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_2_BIAS]->connect(bias_z->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     //Comparing normal differntiation with kalman filter CAMERA Y
     // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(camera_y_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
