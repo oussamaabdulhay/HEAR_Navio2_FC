@@ -202,8 +202,8 @@ int main(int argc, char **argv){
     optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(x_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(x_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_2_BIAS]->connect(bias_x->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA];
-    optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA];
+    optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
+    optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
     //y Provider with kalmna filter
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
@@ -211,8 +211,8 @@ int main(int argc, char **argv){
     optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(y_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(y_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_2_BIAS]->connect(bias_y->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_y->getPorts()[(int)Mux3D::ports_id::IP_0_DATA];
-    optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_y->getPorts()[(int)Mux3D::ports_id::IP_1_DATA];
+    optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_y->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
+    optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_y->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
     //z Provider with kalmna filter
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
@@ -220,8 +220,8 @@ int main(int argc, char **argv){
     optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(z_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(z_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_2_BIAS]->connect(bias_z->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA];
-    optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA];
+    optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
+    optitrack_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
     //Comparing normal differntiation with kalman filter CAMERA Y
     // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(camera_y_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
