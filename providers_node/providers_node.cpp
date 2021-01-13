@@ -161,12 +161,12 @@ int main(int argc, char **argv){
     InvertedSwitch* z_switch_provider_pos= new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* z_switch_provider_vel= new InvertedSwitch(std::greater_equal<float>(), 2.0);
     
-    ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(x_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(x_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(x_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(x_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(z_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(z_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(z_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(z_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
 
     ros_reset_kalmanFilter->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(optitrack_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_2_RESET]);
     ros_reset_kalmanFilter->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(optitrack_y_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_2_RESET]);
