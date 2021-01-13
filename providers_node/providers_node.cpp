@@ -81,7 +81,7 @@ int main(int argc, char **argv){
                                                                     "/imu/acceleration");
     ROSUnit* probe1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/camera_velocity_diff_z");
+                                                                    "/posiition_opti");
     ROSUnit* probe2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "/camera_velocity_diff_y");
@@ -164,7 +164,7 @@ int main(int argc, char **argv){
     //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(x_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(x_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(z_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(z_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
 
@@ -189,6 +189,7 @@ int main(int argc, char **argv){
     optitrack_y_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(((Block*)filter_y_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
     ((Block*)filter_y_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::OP_0_DATA]->connect(y_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(y_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    pos_demux->getPorts()[(int)Demux3D::ports_id::OP_1_DATA]->connect(probe1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     // //Z Provider 
     pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(optitrack_z_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
