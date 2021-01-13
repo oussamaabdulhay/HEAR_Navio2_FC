@@ -169,8 +169,8 @@ int main(int argc, char **argv){
     
     //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(x_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(x_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    //ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(y_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(z_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_kalmanFilter_switch->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(z_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
 
