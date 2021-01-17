@@ -19,6 +19,7 @@
 #include "HEAR_math/Saturation.hpp"
 #include "HEAR_math/ConstantFloat.hpp"
 #include "HEAR_math/KalmanFilter.hpp"
+#include "HEAR_math/NegateFloat.hpp"
 #include "HEAR_control/PIDController.hpp"
 #include "HEAR_control/MRFTController.hpp"
 #include "HEAR_control/BoundingBoxController.hpp"
@@ -307,13 +308,16 @@ int main(int argc, char** argv) {
     inertialToBody_RotMat->getPorts()[(int)Transform_InertialToBody::ports_id::OP_1_DATA]->connect(Y_Saturation->getPorts()[(int)Saturation::ports_id::IP_0_DATA]);
        
     // Roll
-    Sum* sum_ref_roll = new Sum(std::plus<float>());
-    Sum* sum_ref_dot_roll = new Sum(std::plus<float>());
-    Sum* sum_ref_dot_dot_roll = new Sum(std::plus<float>());
+    Sum* sum_ref_roll = new Sum(std::minus<float>());
+    Sum* sum_ref_dot_roll = new Sum(std::minus<float>());
+    Sum* sum_ref_dot_dot_roll = new Sum(std::minus<float>());
     Demux3D* prov_demux_roll = new Demux3D();
     Mux3D* error_mux_roll = new Mux3D();
+    NegateFloat* negate_sign=new NegateFloat();
 
-    Y_Saturation->getPorts()[(int)Saturation::ports_id::OP_0_DATA]->connect(sum_ref_roll->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
+
+    Y_Saturation->getPorts()[(int)Saturation::ports_id::OP_0_DATA]->connect(negate_sign->getPorts()[(int)NegateFloat::ports_id::IP_0_DATA]);
+    negate_sign->getPorts()[(int)NegateFloat::ports_id::OP_0_DATA]->connect(sum_ref_roll->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
     rosunit_roll_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_5]->connect(prov_demux_roll->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
 
     prov_demux_roll->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(sum_ref_roll->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
