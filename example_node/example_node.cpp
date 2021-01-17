@@ -168,7 +168,7 @@ int main(int argc, char** argv) {
     ActuationSystem* myActuationSystem = new HexaActuationSystem(actuators);
     #ifdef BIG_HEXA
     //myActuationSystem->setESCValues(1165 ,1000, 2000);
-    myActuationSystem->setESCValues(1165 ,0, 2000);
+    myActuationSystem->setESCValues(1165 ,100, 2000);
     #endif
     // ActuationSystem* myActuationSystem = new QuadActuationSystem(actuators);
 
