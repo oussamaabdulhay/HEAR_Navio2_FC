@@ -173,12 +173,12 @@ int main(int argc, char** argv) {
     // ActuationSystem* myActuationSystem = new QuadActuationSystem(actuators);
 
     // //***********************************SETTING CONNECTIONS***********************************
-    // //========                                                                             =============
-    // //|      |-------------->X_Control_System-->RM_X-->Saturation-->Pitch_Control_System--->|           |
+    // //========                                                                            =============
+    // //|      |-------------->X_Control_System-->RM_X-->Saturation-->Pitch_Control_System->|           |
     // //| USER |-------------->Y_Control_System-->RM_Y-->Saturation-->Roll_Control_System-->| Actuation |
-    // //|      |-------------->Z_Control_System--------------------------------------------->|  System   |
-    // //|      |-------------->Yaw_Control_System-->Saturation--->YawRate_Control_System---->|           |
-    // //========                                                                             =============
+    // //|      |-------------->Z_Control_System-------------------------------------------->|  System   |
+    // //|      |-------------->Yaw_Control_System-->Saturation--->YawRate_Control_System--->|           |
+    // //========                                                                            =============
     
     //*******************************************************************************************************************
 
