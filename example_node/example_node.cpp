@@ -223,6 +223,7 @@ int main(int argc, char** argv) {
     rosunit_waypoint_x->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
 
+
     rosunit_x_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(provider_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     rosunit_x_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
     rosunit_x_camera_provider_sub->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect(provider_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
