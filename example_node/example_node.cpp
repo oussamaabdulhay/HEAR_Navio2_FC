@@ -42,6 +42,22 @@
 #define BIG_HEXA
 #undef BATTERY_MONITOR
 
+///////////////////////////////////////////////////////////////////////////////////////////////
+//HIGH PRIORITY TODO
+
+//TODO SUM BLOCK RATE CHECK.
+//TODO CHECK ROTATION MATRIX 
+//TODO IMPROVE NAMING OF TRIGGER IN SWITCH BLOCK
+//TODO HOW THE CONSTANT IS TRIGGERED
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+//LOW PRIORITY TODO
+
+//TODO BATTERY MONITOR 
+
+
+
 const int PWM_FREQUENCY = 200;
 const float SATURATION_VALUE_XY = 0.2617; 
 const float SATURATION_VALUE_YAW = 0.2617;
@@ -216,7 +232,6 @@ int main(int argc, char** argv) {
     ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(Translation_camera_switch_x->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(controller_sum_camera_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(provider_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(actuation_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     
