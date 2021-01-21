@@ -131,9 +131,12 @@ int main(int argc, char** argv) {
     ROSUnit* check_output3 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "controller_output_probe");
-    // ROSUnit* check_output3 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
-    //                                                                 "output_provider/Controller_sum");
+    ROSUnit* check_output4 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "output_provider/Controller_pid_opti");
+    ROSUnit* check_output5 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "output_provider/Controller_pid_camera");
                                                                
 
     //**************************SETTING BLOCKS**********************************
@@ -407,8 +410,9 @@ int main(int argc, char** argv) {
     //SUMMING THE PD OUTPUT WITH CAMERA PD OUTPUT
   
     ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_z->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
+    ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(check_output3->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     ((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_z->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
-
+    ((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(check_output4->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     // //Logger
     // ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(check_output1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
@@ -416,7 +420,7 @@ int main(int argc, char** argv) {
 
     // Rotation Matrix
     controller_sum_camera_z->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    controller_sum_camera_z->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(check_output3->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    controller_sum_camera_z->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(check_output5->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     // //Logger
     controller_sum_z->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(((Block*)myActuationSystem)->getPorts()[(int)HexaActuationSystem::ports_id::IP_3_DATA_Z]);
