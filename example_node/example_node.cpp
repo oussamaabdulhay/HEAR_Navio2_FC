@@ -130,7 +130,7 @@ int main(int argc, char** argv) {
                                                                     "output_provider/reference_z");
     ROSUnit* check_output3 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "controller_output");
+                                                                    "controller_output_probe");
     // ROSUnit* check_output3 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
     //                                                                 ROSUnit_msg_type::ROSUnit_Float,
     //                                                                 "output_provider/Controller_sum");
