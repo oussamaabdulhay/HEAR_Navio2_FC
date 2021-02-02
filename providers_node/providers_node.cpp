@@ -88,18 +88,18 @@ int main(int argc, char **argv){
     ROSUnit* probe4 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "/kalmanFilter/z/velocity");
-    ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/rotated_accelerometer");
-    ROSUnit* rosunit_roll_rate = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/gyro_rates/roll");
-    ROSUnit* rosunit_pitch_rate = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/gyro_rates/pitch");
-    ROSUnit* rosunit_yaw_rate = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/gyro_rates/yaw");
+    // ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Point,
+    //                                                                 "/rotated_accelerometer");
+    // ROSUnit* rosunit_roll_rate = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "/gyro_rates/roll");
+    // ROSUnit* rosunit_pitch_rate = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "/gyro_rates/pitch");
+    // ROSUnit* rosunit_yaw_rate = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "/gyro_rates/yaw");
     // ROSUnit* ros_kalmanFilter_switch = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
     //                                                                   ROSUnit_msg_type::ROSUnit_Float,
     //                                                                   "kalman_filter_switch");
@@ -260,13 +260,13 @@ int main(int argc, char **argv){
  
     //Roll Provider
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_2_ROLL_RATE]->connect(((Block*)filter_roll_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
-    myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_2_ROLL_RATE]->connect(rosunit_roll_rate->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    //myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_2_ROLL_RATE]->connect(rosunit_roll_rate->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     ((Block*)filter_roll_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::OP_0_DATA]->connect(mux_provider_roll->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_0_ROLL]->connect(mux_provider_roll->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
 
     //Pitch Provider
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_3_PITCH_RATE]->connect(((Block*)filter_pitch_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
-    myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_3_PITCH_RATE]->connect(rosunit_pitch_rate->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    //myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_3_PITCH_RATE]->connect(rosunit_pitch_rate->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     ((Block*)filter_pitch_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::OP_0_DATA]->connect(mux_provider_pitch->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(mux_provider_pitch->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
 
@@ -276,7 +276,7 @@ int main(int argc, char **argv){
 
     //Yaw Rate Provider
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_4_YAW_RATE]->connect(((Block*)filter_yaw_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
-    myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_4_YAW_RATE]->connect(rosunit_yaw_rate->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    //myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_4_YAW_RATE]->connect(rosunit_yaw_rate->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     ((Block*)filter_yaw_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::OP_0_DATA]->connect(mux_provider_yaw_rate->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     
     //Rotated imu vector
@@ -285,7 +285,7 @@ int main(int argc, char **argv){
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::IP_2_PITCH]);
     wrap_around_yaw->getPorts()[(int)WrapAroundFunction::ports_id::OP_0_DATA]->connect(rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::IP_3_YAW]);
     rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::OP_0_DATA]->connect(rotated_IMU_demux->getPorts()[Demux3D::ports_id::IP_0_DATA]);
-    rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::OP_0_DATA]->connect(rosunit_rotation_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+    //rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::OP_0_DATA]->connect(rosunit_rotation_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
     
     // x_switch_provider_pos->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_provider_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     // x_switch_provider_vel->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_provider_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
