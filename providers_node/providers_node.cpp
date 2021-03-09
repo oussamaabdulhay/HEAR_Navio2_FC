@@ -79,16 +79,10 @@ int main(int argc, char **argv){
                                                                     "global2inertial/orientation");
     ROSUnit* probe1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/diff/x/position");
+                                                                    "/position_threshold");
     ROSUnit* probe2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/diff/x/velocity");
-    ROSUnit* probe3 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/diff/z/position");
-    ROSUnit* probe4 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/diff/z/velocity");
+                                                                    "/velocity_threshold");
     ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/rotated_accelerometer");
@@ -156,6 +150,9 @@ int main(int argc, char **argv){
     rosunit_g2i_orientation->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_2]->connect(ori_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
 
     myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::OP_0_VS]->connect(camera_pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
+
+    myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::Relative_position]->connect(probe1->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+    myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::Relative_velocity]->connect(probe2->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);;
    
     myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::OP_1_tracking_hovering_x]->connect(kalmanFilter_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::OP_2_tracking_hovering_z]->connect(kalmanFilter_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
@@ -193,8 +190,8 @@ int main(int argc, char **argv){
 
     //Comparing normal differntiation with kalman filter CAMERA X
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(camera_x_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
-    camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe2->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(probe1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    // camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe2->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(probe1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     
     //CAMERA X PROVIDER WITH KALMAN FILTER
@@ -211,8 +208,8 @@ int main(int argc, char **argv){
 
     //Comparing normal differntiation with kalman filter CAMERA Z
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(camera_z_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
-    camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe4->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(probe3->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    // camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe4->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(probe3->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
 
     //CAMERA Z PROVIDER WITH KALMAN FILTER
