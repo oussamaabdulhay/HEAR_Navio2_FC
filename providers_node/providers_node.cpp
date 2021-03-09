@@ -78,10 +78,10 @@ int main(int argc, char **argv){
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "global2inertial/orientation");
     ROSUnit* probe1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/position_threshold");
     ROSUnit* probe2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/velocity_threshold");
     ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
