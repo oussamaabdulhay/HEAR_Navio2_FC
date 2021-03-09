@@ -99,6 +99,12 @@ int main(int argc, char** argv) {
     ROSUnit* ros_camera_pid_switch_z = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                                       ROSUnit_msg_type::ROSUnit_Float,
                                                                       "camera_pid_switch_z");//5
+    ROSUnit* rosunit_hovering_tracking_switch_x = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
+                                                                      ROSUnit_msg_type::ROSUnit_Float,
+                                                                      "step_pds_switch_x");//6
+    ROSUnit* rosunit_hovering_tracking_switch_z = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
+                                                                      ROSUnit_msg_type::ROSUnit_Float,
+                                                                      "step_pds_switch_z");//7
     ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/x");//0
@@ -145,9 +151,11 @@ int main(int argc, char** argv) {
     Block* PID_pitch = new PIDController(block_id::PID_PITCH);
     Block* PID_y = new PIDController(block_id::PID_Y);
     Block* PID_x_camera = new PIDController(block_id::PID_Camera_X);
+    Block* PID_x_camera_tracking = new PIDController(block_id::PID_Camera_X_tracking);
     Block* PID_roll = new PIDController(block_id::PID_ROLL);
     Block* PID_z = new PIDController(block_id::PID_Z);
     Block* PID_z_camera = new PIDController(block_id::PID_Camera_Z);
+    Block* PID_z_camera_tracking = new PIDController(block_id::PID_Camera_Z_tracking);
     Block* PID_yaw = new PIDController(block_id::PID_YAW);
     Block* PID_yaw_rate = new PIDController(block_id::PID_YAW_RATE);
 
@@ -191,6 +199,7 @@ int main(int argc, char** argv) {
 
     Switch* PID_MRFT_switch_x = new Switch(std::greater_equal<float>(), 2.0);
     Switch* Translation_camera_switch_x = new Switch(std::greater_equal<float>(), 2.0);
+    Switch* tracking_hovering_switch_x = new Switch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* reference_switch_x = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* provider_switch_x = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* controller_sum_switch_x = new InvertedSwitch(std::greater_equal<float>(), 2.0);
@@ -213,7 +222,7 @@ int main(int argc, char** argv) {
 
     ros_camera_mrft_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(PID_MRFT_switch_x->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
     ros_camera_mrft_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
-    ros_camera_mrft_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_mrft_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]); //TODO: Switch sequence matters where it shouldnt.
     ros_camera_mrft_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(controller_sum_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_mrft_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_1]->connect(provider_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
 
@@ -222,6 +231,8 @@ int main(int argc, char** argv) {
     ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(provider_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_2]->connect(actuation_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+
+    rosunit_hovering_tracking_switch_x->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_6]->connect(tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
     
     rosunit_waypoint_x->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_0]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
@@ -242,7 +253,9 @@ int main(int argc, char** argv) {
 
     error_mux_x->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(Translation_camera_switch_x->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_x->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(PID_MRFT_switch_x->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
-    Translation_camera_switch_x->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_x_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
+    Translation_camera_switch_x->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
+    tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_x_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
+    tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_x_camera_tracking)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_x->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_x)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_x->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((MRFTController*)MRFT_x)->getPorts()[(int)MRFTController::ports_id::IP_0_DATA]);
 
@@ -254,6 +267,7 @@ int main(int argc, char** argv) {
 
     ((PIDController*)PID_x)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_x->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
     ((PIDController*)PID_x_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_x->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
+    ((PIDController*)PID_x_camera_tracking)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_x->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
 
     // Rotation Matrix
     controller_sum_camera_x->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
@@ -342,6 +356,7 @@ int main(int argc, char** argv) {
 
     Switch* PID_MRFT_switch_z = new Switch(std::greater_equal<float>(), 2.0);
     Switch* Translation_camera_switch_z = new Switch(std::greater_equal<float>(), 2.0);
+    Switch* tracking_hovering_switch_z = new Switch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* reference_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* provider_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* controller_sum_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
@@ -373,7 +388,8 @@ int main(int argc, char** argv) {
     ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     
-       
+    rosunit_hovering_tracking_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_7]->connect(tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
+
     rosunit_waypoint_z->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_2]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
 
@@ -394,7 +410,9 @@ int main(int argc, char** argv) {
 
     error_mux_z->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
-    Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
+    Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
+    tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
+    tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_z_camera_tracking)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::IP_0_DATA]);
     
@@ -408,6 +426,7 @@ int main(int argc, char** argv) {
   
     ((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_z->getPorts()[(int)Sum::ports_id::IP_1_DATA]);
     ((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_z->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
+    ((PIDController*)PID_z_camera_tracking)->getPorts()[(int)PIDController::ports_id::OP_0_DATA]->connect(controller_sum_camera_z->getPorts()[(int)Sum::ports_id::IP_0_DATA]);
 
 
     // Rotation Matrix
