@@ -146,27 +146,27 @@ int main(int argc, char **argv){
     InvertedSwitch* mux_position_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* mux_velocity_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
 
-    Threshold_status* threshold_x = new Threshold_status(1000, 1000, CAMERA_FREQUENCY);
-    Threshold_status* threshold_z = new Threshold_status(1000, 1000, CAMERA_FREQUENCY);
+    Threshold_status* threshold_x = new Threshold_status(0.1, 0.1, CAMERA_FREQUENCY);
+    Threshold_status* threshold_z = new Threshold_status(0.1, 0.1, CAMERA_FREQUENCY);
 
     
     rosunit_g2i_position->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
     rosunit_g2i_orientation->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(ori_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
 
     myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::OP_0_VS]->connect(camera_pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
-    // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(threshold_x->getPorts()[Threshold_status::ports_id::IP_0]);
-    // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(threshold_z->getPorts()[Threshold_status::ports_id::IP_0]);
+    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(threshold_x->getPorts()[Threshold_status::ports_id::IP_0]);
+    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(threshold_z->getPorts()[Threshold_status::ports_id::IP_0]);
    
-    // threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(kalmanFilter_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    // threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(kalmanFilter_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    // threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(kalmanFilter_acc_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    // threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(kalmanFilter_acc_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    // threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    // threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    // threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    // threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
-    // threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(rosunit_switch_pds_x->getPorts()[(int)ROSUnit_SetFloatClnt::ports_id::IP_0]);
-    // threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(rosunit_switch_pds_z->getPorts()[(int)ROSUnit_SetFloatClnt::ports_id::IP_0]);
+    threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(kalmanFilter_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(kalmanFilter_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(kalmanFilter_acc_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(kalmanFilter_acc_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(rosunit_switch_pds_x->getPorts()[(int)ROSUnit_SetFloatClnt::ports_id::IP_0]);
+    threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(rosunit_switch_pds_z->getPorts()[(int)ROSUnit_SetFloatClnt::ports_id::IP_0]);
     //myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_5_FREE_ACCELERATION]->connect(ros_free_acceleration->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
     // Setting Provider -> Always leave the pv connection last. Do pv_dot and pv_dot_dor first.
     // X Provider 
@@ -203,11 +203,11 @@ int main(int argc, char **argv){
     kalmanFilter_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
     kalmanFilter_acc_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     rosunit_reset_kalman->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_2_RESET]);
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(camera_x_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
-    camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
@@ -223,11 +223,11 @@ int main(int argc, char **argv){
     kalmanFilter_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
     kalmanFilter_acc_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     rosunit_reset_kalman->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_2_RESET]);
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(camera_z_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
-    camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
  
