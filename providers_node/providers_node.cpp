@@ -89,7 +89,7 @@ int main(int argc, char **argv){
                                                                     "/rotated_accelerometer");
     //***********************ADDING SENSORS********************************
     ROSUnit* myROSUnit_Xsens = new ROSUnit_IMU(nh);
-    ROSUnit* myROSUnit_CAMERA = new ROSUnit_VS(nh);
+    //ROSUnit* myROSUnit_CAMERA = new ROSUnit_VS(nh);
     //***********************SETTING PROVIDERS**********************************
     Mux3D* mux_provider_x = new Mux3D();
     Mux3D* mux_provider_y = new Mux3D();
@@ -153,7 +153,7 @@ int main(int argc, char **argv){
     rosunit_g2i_position->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
     rosunit_g2i_orientation->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(ori_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
 
-    myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::OP_0_VS]->connect(camera_pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
+    //myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::OP_0_VS]->connect(camera_pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(threshold_x->getPorts()[Threshold_status::ports_id::IP_0]);
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(threshold_z->getPorts()[Threshold_status::ports_id::IP_0]);
    
