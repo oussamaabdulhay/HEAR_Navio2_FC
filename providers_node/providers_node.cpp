@@ -146,8 +146,8 @@ int main(int argc, char **argv){
     InvertedSwitch* mux_position_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
     InvertedSwitch* mux_velocity_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
 
-    Threshold_status* threshold_x = new Threshold_status(0.1, 0.25, CAMERA_FREQUENCY);
-    Threshold_status* threshold_z = new Threshold_status(0.1, 0.25, CAMERA_FREQUENCY);
+    Threshold_status* threshold_x = new Threshold_status(0.25, 0.1, CAMERA_FREQUENCY);
+    Threshold_status* threshold_z = new Threshold_status(0.25, 0.1, CAMERA_FREQUENCY);
 
     
     rosunit_g2i_position->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
