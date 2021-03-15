@@ -20,6 +20,7 @@
 #include "HEAR_math/KalmanFilter.hpp"
 #include "HEAR_math/InverseRotateVec.hpp"
 #include "HEAR_math/DownSampler.hpp"
+#include "HEAR_math/SupressPeak.hpp"
 #include "HEAR_core/InvertedSwitch.hpp"
 #include "HEAR_mission/Threshold_status.hpp"
 #include "HEAR_core/Switch.hpp"
@@ -151,8 +152,10 @@ int main(int argc, char **argv){
 
     Threshold_status* threshold_x = new Threshold_status(0.2, 0.05, 100, CAMERA_FREQUENCY);
     Threshold_status* threshold_z = new Threshold_status(0.2, 0.05, 100, CAMERA_FREQUENCY);
-
     
+    SupressPeak* supress_vel_x = new SupressPeak(5);
+    SupressPeak* supress_vel_z = new SupressPeak(5);
+
     rosunit_g2i_position->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
     rosunit_g2i_orientation->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(ori_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
 
@@ -219,7 +222,8 @@ int main(int argc, char **argv){
     camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     
     mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-    mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
+    mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(supress_vel_x->getPorts()[(int)SupressPeak::ports_id::IP_0_VEL]);
+    supress_vel_x->getPorts()[(int)SupressPeak::ports_id::OP_VEL_THRESHOLDED]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
     //Comparing normal differntiation with kalman filter CAMERA Z
     
@@ -244,7 +248,8 @@ int main(int argc, char **argv){
     camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     
     mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-    mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
+    mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(supress_vel_z->getPorts()[(int)SupressPeak::ports_id::IP_0_VEL]);
+    supress_vel_z->getPorts()[(int)SupressPeak::ports_id::OP_VEL_THRESHOLDED]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
  
     //Roll Provider
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_2_ROLL_RATE]->connect(((Block*)filter_roll_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
