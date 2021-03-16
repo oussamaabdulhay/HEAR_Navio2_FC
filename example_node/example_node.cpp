@@ -144,6 +144,9 @@ int main(int argc, char** argv) {
     ROSUnit* rosunit_waypoint_yaw = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "waypoint_reference/yaw");//3
+    ROSUnit* MRFT_x_probe = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "MRFT/x");//3
                                                                
 
     //**************************SETTING BLOCKS**********************************
@@ -272,6 +275,7 @@ int main(int argc, char** argv) {
     // Rotation Matrix
     controller_sum_camera_x->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     controller_sum_x->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(actuation_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    controller_sum_x->getPorts()[(int)Sum::ports_id::OP_0_DATA]->connect(MRFT_x_probe->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     actuation_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(inertialToBody_RotMat->getPorts()[(int)Transform_InertialToBody::ports_id::IP_0_X]);
       
 
