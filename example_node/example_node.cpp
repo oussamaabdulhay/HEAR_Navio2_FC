@@ -257,8 +257,8 @@ int main(int argc, char** argv) {
     error_mux_x->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(Translation_camera_switch_x->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_x->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(PID_MRFT_switch_x->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_x->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
-    tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_x_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
-    tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_x_camera_tracking)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
+    tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_x_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
+    tracking_hovering_switch_x->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_x_camera_tracking)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_x->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_x)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_x->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((MRFTController*)MRFT_x)->getPorts()[(int)MRFTController::ports_id::IP_0_DATA]);
 
@@ -415,8 +415,8 @@ int main(int argc, char** argv) {
     error_mux_z->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
-    tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
-    tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_z_camera_tracking)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
+    tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
+    tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((PIDController*)PID_z_camera_tracking)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_z)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
     PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(((MRFTController*)MRFT_z)->getPorts()[(int)MRFTController::ports_id::IP_0_DATA]);
     
