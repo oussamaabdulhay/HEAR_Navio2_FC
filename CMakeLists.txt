@@ -27,6 +27,9 @@ include_directories(
 add_executable(example_flight_controller_node example_node/example_node.cpp)
 target_link_libraries(example_flight_controller_node ${catkin_LIBRARIES})
 
+add_executable(Esc_calibration_node example_node/calibrate_esc_node.cpp)
+target_link_libraries(Esc_calibration_node ${catkin_LIBRARIES})
+
 add_executable(global2inertial_node global2inertial_node/global2inertial_node.cpp)
 target_link_libraries(global2inertial_node ${catkin_LIBRARIES})
 
