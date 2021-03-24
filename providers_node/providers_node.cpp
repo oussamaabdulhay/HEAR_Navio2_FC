@@ -173,8 +173,8 @@ int main(int argc, char **argv){
     threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(rosunit_switch_pds_x->getPorts()[(int)ROSUnit_SetFloatClnt::ports_id::IP_0]);
     threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(rosunit_switch_pds_z->getPorts()[(int)ROSUnit_SetFloatClnt::ports_id::IP_0]);
-    threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(probe4->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(probe1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    // threshold_x->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(probe4->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    // threshold_z->getPorts()[Threshold_status::ports_id::OP_0_HOV_TRACK]->connect(probe1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     //myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_5_FREE_ACCELERATION]->connect(ros_free_acceleration->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
     // Setting Provider -> Always leave the pv connection last. Do pv_dot and pv_dot_dor first.
     // X Provider 
