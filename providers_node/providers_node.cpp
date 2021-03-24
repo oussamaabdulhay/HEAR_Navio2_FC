@@ -81,7 +81,7 @@ int main(int argc, char **argv){
                                                                     "global2inertial/orientation");
     ROSUnit* probe1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/trigger_z");
+                                                                    "/diff_x");
     ROSUnit* probe2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/kalman_filter_output_z");
@@ -90,7 +90,7 @@ int main(int argc, char **argv){
                                                                     "/kalman_filter_output_x");
     ROSUnit* probe4 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/trigger_x");
+                                                                    "/diff_z");
     // ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
     //                                                                 ROSUnit_msg_type::ROSUnit_Point,
     //                                                                 "/rotated_accelerometer");
@@ -220,6 +220,7 @@ int main(int argc, char **argv){
 
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(camera_x_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
     camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     
     mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(supress_vel_x->getPorts()[(int)SupressPeak::ports_id::IP_0_VEL]);
@@ -246,7 +247,8 @@ int main(int argc, char **argv){
 
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(camera_z_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
     camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    
+    camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe4->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+
     mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(supress_vel_z->getPorts()[(int)SupressPeak::ports_id::IP_0_VEL]);
     supress_vel_z->getPorts()[(int)SupressPeak::ports_id::OP_VEL_THRESHOLDED]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
