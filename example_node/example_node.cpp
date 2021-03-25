@@ -375,7 +375,7 @@ int main(int argc, char** argv) {
     Sum* controller_sum_camera_z = new Sum(std::plus<float>());
     Demux3D* prov_demux_z = new Demux3D();
     Mux3D* error_mux_z = new Mux3D();
-    ConstantFloat* constant_reference_z=new ConstantFloat(1.5);
+    ConstantFloat* constant_reference_z=new ConstantFloat(0);
     ConstantFloat* zero_constant_z=new ConstantFloat(0);
 
     ros_optitrack_mrft_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_3]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
