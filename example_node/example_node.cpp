@@ -147,6 +147,9 @@ int main(int argc, char** argv) {
     ROSUnit* MRFT_x_probe = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "MRFT/x");//3
+    ROSUnit* error_probe = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "error/z");//3
                                                                
 
     //**************************SETTING BLOCKS**********************************
@@ -413,6 +416,7 @@ int main(int argc, char** argv) {
 
 
     error_mux_z->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
+    error_mux_z->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(error_probe->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(PID_MRFT_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     Translation_camera_switch_z->getPorts()[(int)Switch::ports_id::OP_1_DATA]->connect(tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::IP_0_DATA]);
     tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::OP_0_DATA_DEFAULT]->connect(((PIDController*)PID_z_camera)->getPorts()[(int)PIDController::ports_id::IP_0_DATA]);
