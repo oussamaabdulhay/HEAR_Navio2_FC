@@ -105,6 +105,9 @@ int main(int argc, char** argv) {
     ROSUnit* rosunit_hovering_tracking_switch_z = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                                       ROSUnit_msg_type::ROSUnit_Float,
                                                                       "step_pds_switch_z");//7
+    ROSUnit* rosunit_hovering_tracking_switch_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
+                                                                      ROSUnit_msg_type::ROSUnit_Float,
+                                                                      "step_pds_switch_y");//8
     ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/x");//0
@@ -339,8 +342,11 @@ int main(int argc, char** argv) {
     ConstantFloat* constant_reference_y=new ConstantFloat(0);
     ConstantFloat* zero_constant_y=new ConstantFloat(0);
 
+    rosunit_hovering_tracking_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_8]->connect(tracking_hovering_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
+
+
     rosunit_waypoint_y->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_1]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
 
     rosunit_y_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     rosunit_y_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
