@@ -483,7 +483,6 @@ int main(int argc, char** argv) {
     constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
 
     rosunit_z_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_3]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    rosunit_z_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_3]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
     rosunit_z_camera_provider_sub->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_4]->connect(provider_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     rosunit_z_camera_provider_sub->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_4]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
 
