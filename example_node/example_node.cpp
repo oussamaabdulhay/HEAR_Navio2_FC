@@ -108,6 +108,15 @@ int main(int argc, char** argv) {
     ROSUnit* rosunit_hovering_tracking_switch_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                                       ROSUnit_msg_type::ROSUnit_Float,
                                                                       "step_pds_switch_y");//8
+    ROSUnit* ros_optitrack_mrft_switch_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
+                                                                      ROSUnit_msg_type::ROSUnit_Float,
+                                                                      "optitrack_mrft_switch_y");//9
+    ROSUnit* ros_camera_mrft_switch_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
+                                                                      ROSUnit_msg_type::ROSUnit_Float,
+                                                                      "camera_mrft_switch_y");//10
+    ROSUnit* ros_camera_pid_switch_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
+                                                                      ROSUnit_msg_type::ROSUnit_Float,
+                                                                      "camera_pid_switch_y");//11
     ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/x");//0
@@ -341,6 +350,23 @@ int main(int argc, char** argv) {
     Mux3D* error_mux_y = new Mux3D();
     ConstantFloat* constant_reference_y=new ConstantFloat(0);
     ConstantFloat* zero_constant_y=new ConstantFloat(0);
+
+    ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_9]->connect(PID_MRFT_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
+    ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_9]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
+    ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_9]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_9]->connect(controller_sum_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+
+    ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_10]->connect(PID_MRFT_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
+    ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_10]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
+    ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_10]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]); //TODO: Switch sequence matters where it shouldnt.
+    ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_10]->connect(controller_sum_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_10]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_11]->connect(Translation_camera_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_11]->connect(constant_reference_y->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_11]->connect(reference_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_11]->connect(provider_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
+    ros_camera_pid_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_11]->connect(actuation_switch_y->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
 
     rosunit_hovering_tracking_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_8]->connect(tracking_hovering_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
 
