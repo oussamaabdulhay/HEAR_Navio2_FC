@@ -117,6 +117,9 @@ int main(int argc, char** argv) {
     ROSUnit* ros_camera_pid_switch_y = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
                                                                       ROSUnit_msg_type::ROSUnit_Float,
                                                                       "camera_pid_switch_y");//11
+    ROSUnit* ros_update_constant_z = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Server,
+                                                                      ROSUnit_msg_type::ROSUnit_Float,
+                                                                      "update_constant_z");//12
     ROSUnit* rosunit_x_provider = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/providers/x");//0
@@ -478,6 +481,9 @@ int main(int argc, char** argv) {
     ros_camera_pid_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_5]->connect(actuation_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_1_TRIGGER]);
     
     rosunit_hovering_tracking_switch_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_7]->connect(tracking_hovering_switch_z->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
+
+    ros_update_constant_z->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_12]->connect(constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::IP_0_DATA]);
+
 
     rosunit_waypoint_z->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_2]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
