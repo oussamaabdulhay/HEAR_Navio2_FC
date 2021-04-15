@@ -93,10 +93,10 @@ int main(int argc, char **argv){
                                                                     "/diff_z");
     ROSUnit* probe3 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/kalman_filter_output_z");
+                                                                    "/kalman_filter_output_x");
     ROSUnit* probe4 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/kalman_filter_output_x");
+                                                                    "/kalman_filter_output_z");
     ROSUnit* probe5 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/trigger_x");
