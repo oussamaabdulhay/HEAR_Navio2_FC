@@ -274,7 +274,7 @@ int main(int argc, char** argv) {
 
     rosunit_waypoint_x->getPorts()[(int)ROSUnit_FloatSub::ports_id::OP_0]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(reference_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-     constant_reference_z->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(ros_ref_x_probe->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+    constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::OP_0_DATA]->connect(ros_ref_x_probe->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     rosunit_x_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(provider_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     rosunit_x_provider->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(constant_reference_x->getPorts()[(int)ConstantFloat::ports_id::IP_1_TRIGGER]);
