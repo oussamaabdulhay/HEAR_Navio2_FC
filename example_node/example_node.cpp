@@ -360,7 +360,7 @@ int main(int argc, char** argv) {
     Sum* controller_sum_camera_y = new Sum(std::plus<float>());
     Demux3D* prov_demux_y = new Demux3D();
     Mux3D* error_mux_y = new Mux3D();
-    ConstantFloat* constant_reference_y=new ConstantFloat(0);
+    ConstantFloat* constant_reference_y=new ConstantFloat(0.83);
     ConstantFloat* zero_constant_y=new ConstantFloat(0);
 
     ros_optitrack_mrft_switch_y->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_9]->connect(PID_MRFT_switch_y->getPorts()[(int)Switch::ports_id::IP_1_TRIGGER]);
