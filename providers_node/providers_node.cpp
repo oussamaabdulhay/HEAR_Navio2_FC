@@ -27,7 +27,7 @@
 
 
 const int OPTITRACK_FREQUENCY = 120;
-const int CAMERA_FREQUENCY = 60;
+const int CAMERA_FREQUENCY = 59;
 
 int main(int argc, char **argv){
     ros::init(argc, argv, "providers_node");
