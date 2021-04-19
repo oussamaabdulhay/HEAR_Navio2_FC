@@ -103,18 +103,18 @@ int main(int argc, char **argv){
     ROSUnit* probe6 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/trigger_z");
-    ROSUnit* probe7 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/trigger_y");
-    ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/rotated_accelerometer");
-    ROSUnit* probe8 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/diff_y");
-    ROSUnit* probe9 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/kalman_filter_output_y");
+    // ROSUnit* probe7 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Point,
+    //                                                                 "/trigger_y");
+    // ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Point,
+    //                                                                 "/rotated_accelerometer");
+    // ROSUnit* probe8 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Float,
+    //                                                                 "/diff_y");
+    // ROSUnit* probe9 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+    //                                                                 ROSUnit_msg_type::ROSUnit_Point,
+    //                                                                 "/kalman_filter_output_y");
     //***********************ADDING SENSORS********************************
     ROSUnit* myROSUnit_Xsens = new ROSUnit_IMU(nh);
     ROSUnit* myROSUnit_CAMERA = new ROSUnit_VS(nh);
@@ -240,20 +240,20 @@ int main(int argc, char **argv){
 
     
     //CAMERA X PROVIDER WITH KALMAN FILTER
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
 
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
     rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_0_DATA]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     rosunit_reset_kalman->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_2_RESET]);
     
-    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     
     camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(camera_x_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
-    camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     
     mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
@@ -283,20 +283,20 @@ int main(int argc, char **argv){
     // supress_vel_y->getPorts()[(int)SupressPeak::ports_id::OP_VEL_THRESHOLDED]->connect(mux_camera_provider_y->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
     //CAMERA Z PROVIDER WITH KALMAN FILTER
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
     rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_2_DATA]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
     rosunit_reset_kalman->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_2_RESET]);
     
-    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
+    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
     
     camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(camera_z_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
-    camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
+    camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe2->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
 
     mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
@@ -330,7 +330,7 @@ int main(int argc, char **argv){
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::IP_2_PITCH]);
     wrap_around_yaw->getPorts()[(int)WrapAroundFunction::ports_id::OP_0_DATA]->connect(rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::IP_3_YAW]);
     rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::OP_0_DATA]->connect(rotated_IMU_demux->getPorts()[Demux3D::ports_id::IP_0_DATA]);
-    rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::OP_0_DATA]->connect(rosunit_rotation_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
+    //rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::OP_0_DATA]->connect(rosunit_rotation_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
     
        
     mux_provider_x->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(rosunit_x_provider_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
