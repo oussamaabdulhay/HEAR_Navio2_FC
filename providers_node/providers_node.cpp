@@ -95,10 +95,10 @@ int main(int argc, char **argv){
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/kalman_filter_output_z");
     ROSUnit* probe5 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
                                                                     "/trigger_x");
     ROSUnit* probe6 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
                                                                     "/trigger_z");
 
     //***********************ADDING SENSORS********************************
