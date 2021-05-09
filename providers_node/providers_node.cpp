@@ -172,8 +172,8 @@ int main(int argc, char **argv){
     SupressPeak* supress_vel_x = new SupressPeak(5);
     SupressPeak* supress_vel_z = new SupressPeak(5);
 
-    PolyFilter* poly_fit_x = new PolyFilter(100,16,2);
-    PolyFilter* poly_fit_z = new PolyFilter(100,16,2);
+    PolyFilter* poly_fit_x = new PolyFilter(100,32,2);
+    PolyFilter* poly_fit_z = new PolyFilter(100,32,2);
 
     rosunit_g2i_position->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
     rosunit_g2i_orientation->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(ori_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
