@@ -21,9 +21,11 @@
 #include "HEAR_math/InverseRotateVec.hpp"
 #include "HEAR_math/DownSampler.hpp"
 #include "HEAR_math/SupressPeak.hpp"
+#include "HEAR_math/PolyFilter.hpp"
 #include "HEAR_core/InvertedSwitch.hpp"
 #include "HEAR_mission/Threshold_status.hpp"
 #include "HEAR_core/Switch.hpp"
+
 
 
 const int OPTITRACK_FREQUENCY = 120;
@@ -100,6 +102,12 @@ int main(int argc, char **argv){
     ROSUnit* probe6 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "/trigger_z");
+    ROSUnit* probe7 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "/polyfilter/x");
+    ROSUnit* probe8 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
+                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    "/polyfilter/z");
 
     //***********************ADDING SENSORS********************************
     ROSUnit* myROSUnit_Xsens = new ROSUnit_IMU(nh);
@@ -163,6 +171,9 @@ int main(int argc, char **argv){
     
     SupressPeak* supress_vel_x = new SupressPeak(5);
     SupressPeak* supress_vel_z = new SupressPeak(5);
+
+    PolyFilter* poly_fit_x = new PolyFilter(100,32,2);
+    PolyFilter* poly_fit_z = new PolyFilter(100,32,2);
 
     rosunit_g2i_position->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_0]->connect(pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
     rosunit_g2i_orientation->getPorts()[(int)ROSUnit_PointSub::ports_id::OP_1]->connect(ori_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
@@ -233,6 +244,9 @@ int main(int argc, char **argv){
     mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(supress_vel_x->getPorts()[(int)SupressPeak::ports_id::IP_0_VEL]);
     supress_vel_x->getPorts()[(int)SupressPeak::ports_id::OP_VEL_THRESHOLDED]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
 
+    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(poly_fit_x->getPorts()[(int)PolyFilter::ports_id::IP_0_DATA]);
+    poly_fit_x->getPorts()[(int)PolyFilter::ports_id::OP_1_FILT_DOT]->connect(probe7->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
+
     //CAMERA Z PROVIDER WITH KALMAN FILTER
     camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
     
@@ -253,6 +267,9 @@ int main(int argc, char **argv){
     mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
     mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(supress_vel_z->getPorts()[(int)SupressPeak::ports_id::IP_0_VEL]);
     supress_vel_z->getPorts()[(int)SupressPeak::ports_id::OP_VEL_THRESHOLDED]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
+
+    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(poly_fit_z->getPorts()[(int)PolyFilter::ports_id::IP_0_DATA]);
+    poly_fit_z->getPorts()[(int)PolyFilter::ports_id::OP_1_FILT_DOT]->connect(probe8->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
  
     //Roll Provider
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_2_ROLL_RATE]->connect(((Block*)filter_roll_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
