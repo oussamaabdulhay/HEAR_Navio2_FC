@@ -41,3 +41,6 @@ target_link_libraries(providers_node ${catkin_LIBRARIES})
 
 add_executable(waypoint_reference_node waypoint_reference_node/waypoint_reference_node.cpp)
 target_link_libraries(waypoint_reference_node ${catkin_LIBRARIES})
+
+add_executable(providers_camera_node providers_camera_node/providers_camera_node.cpp)
+target_link_libraries(providers_camera_node ${catkin_LIBRARIES})
