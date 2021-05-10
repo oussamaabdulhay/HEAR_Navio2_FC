@@ -78,7 +78,7 @@ int main(int argc, char **argv){
                                                                     ROSUnit_msg_type::ROSUnit_Float,
                                                                     "/polyfilter/z");
     ROSUnit* rosunit_rotation_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
+                                                                    ROSUnit_msg_type::ROSUnit_Point,
                                                                     "/rotated_imu");
     ROSUnit* bias_x = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
                                                                     ROSUnit_msg_type::ROSUnit_Float,
