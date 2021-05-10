@@ -27,7 +27,7 @@
 const int CAMERA_FREQUENCY = 100;
 
 int main(int argc, char **argv){
-    ros::init(argc, argv, "providers_node");
+    ros::init(argc, argv, "providers_camera_node");
     ros::NodeHandle nh;
     ros::Rate rate(200);
     ROSUnit_Factory ROSUnit_Factory_main{nh};
