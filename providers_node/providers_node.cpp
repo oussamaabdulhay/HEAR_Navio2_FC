@@ -16,17 +16,10 @@
 #include "HEAR_ROS_BRIDGE/ROSUnit_Optitrack.hpp"
 #include "HEAR_math/Differentiator.hpp"
 #include "HEAR_math/ButterFilter_2nd.hpp"
-#include "HEAR_ROS_BRIDGE/ROSUnit_VS.hpp"
-#include "HEAR_core/InvertedSwitch.hpp"
-#include "HEAR_math/SupressPeak.hpp"
-#include "HEAR_core/Switch.hpp"
-#include "HEAR_math/KalmanFilter.hpp"
-#include "HEAR_math/InverseRotateVec.hpp"
 
 
 
 const int OPTITRACK_FREQUENCY = 120;
-const int CAMERA_FREQUENCY = 100;
 
 
 int main(int argc, char **argv){
@@ -62,31 +55,9 @@ int main(int argc, char **argv){
     ROSUnit* rosunit_g2i_orientation = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Subscriber, 
                                                                     ROSUnit_msg_type::ROSUnit_Point,
                                                                     "global2inertial/orientation");
-    ROSUnit* rosunit_x_camera_provider_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/providers/camera/x");
-    ROSUnit* rosunit_y_camera_provider_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/providers/camera/y");
-    ROSUnit* rosunit_z_camera_provider_pub = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/providers/camera/z");
-    ROSUnit* probe1 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/diff_x");
-    ROSUnit* probe2 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Float,
-                                                                    "/diff_z");
-    ROSUnit* probe3 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/kalman_filter_output_x");
-    ROSUnit* probe4 = ROSUnit_Factory_main.CreateROSUnit(ROSUnit_tx_rx_type::Publisher, 
-                                                                    ROSUnit_msg_type::ROSUnit_Point,
-                                                                    "/kalman_filter_output_z");
 
     //***********************ADDING SENSORS********************************
     ROSUnit* myROSUnit_Xsens = new ROSUnit_IMU(nh);
-    ROSUnit* myROSUnit_CAMERA = new ROSUnit_VS(nh);
     //***********************SETTING PROVIDERS**********************************
     Mux3D* mux_provider_x = new Mux3D();
     Mux3D* mux_provider_y = new Mux3D();
@@ -99,29 +70,6 @@ int main(int argc, char **argv){
 
     Demux3D* pos_demux = new Demux3D();
     Demux3D* ori_demux = new Demux3D();
-    Demux3D* camera_pos_demux = new Demux3D();
-    Demux3D* rotated_IMU_demux = new Demux3D();
-    InverseRotateVec* rotation_IMU = new InverseRotateVec();
-
-    InvertedSwitch* mux_position_switch_x = new InvertedSwitch(std::greater_equal<float>(), 2.0);
-    InvertedSwitch* mux_velocity_switch_x = new InvertedSwitch(std::greater_equal<float>(), 2.0);
-    InvertedSwitch* mux_position_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
-    InvertedSwitch* mux_velocity_switch_z = new InvertedSwitch(std::greater_equal<float>(), 2.0);
-
-    Mux3D* mux_provider_kalman_x = new Mux3D();
-    //Mux3D* mux_provider_kalman_y = new Mux3D();
-    Mux3D* mux_provider_kalman_z = new Mux3D();
-
-    Mux3D* mux_camera_provider_x = new Mux3D();
-    //Mux3D* mux_camera_provider_y = new Mux3D();
-    Mux3D* mux_camera_provider_z = new Mux3D();
-
-    KalmanFilter* camera_x_kalmanFilter= new KalmanFilter(1);
-    KalmanFilter* camera_z_kalmanFilter= new KalmanFilter(1);
-    Differentiator* camera_x_dot = new Differentiator(1./CAMERA_FREQUENCY);
-    Differentiator* camera_z_dot = new Differentiator(1./CAMERA_FREQUENCY);
-    SupressPeak* supress_vel_x = new SupressPeak(5);
-    SupressPeak* supress_vel_z = new SupressPeak(5);
    
 
     WrapAroundFunction* wrap_around_yaw = new WrapAroundFunction(-M_PI, M_PI);
@@ -187,68 +135,6 @@ int main(int argc, char **argv){
     myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_4_YAW_RATE]->connect(((Block*)filter_yaw_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::IP_0_DATA]);
     //myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_4_YAW_RATE]->connect(rosunit_yaw_rate->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
     ((Block*)filter_yaw_dot)->getPorts()[(int)ButterFilter_2nd::ports_id::OP_0_DATA]->connect(mux_provider_yaw_rate->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-
-    myROSUnit_CAMERA->getPorts()[(int)ROSUnit_VS::ports_id::OP_0_VS]->connect(camera_pos_demux->getPorts()[(int)Demux3D::ports_id::IP_0_DATA]);
-
-    //CAMERA X PROVIDER WITH KALMAN FILTER
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-
-    // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(poly_fit_x->getPorts()[(int)PolyFilter::ports_id::IP_0_DATA]);
-    // poly_fit_x->getPorts()[(int)PolyFilter::ports_id::OP_1_FILT_DOT]->connect(probe7->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
-    rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_0_DATA]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
-    //rosunit_reset_kalman->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_2_RESET]);
-    
-    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    
-    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-    camera_x_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
-
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_0_DATA]->connect(camera_x_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
-    //poly_fit_x->getPorts()[(int)PolyFilter::ports_id::OP_1_FILT_DOT]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    //camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    camera_x_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe1->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-    
-    mux_position_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-    mux_velocity_switch_x->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(supress_vel_x->getPorts()[(int)SupressPeak::ports_id::IP_0_VEL]);
-    supress_vel_x->getPorts()[(int)SupressPeak::ports_id::OP_VEL_THRESHOLDED]->connect(mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
-
-
-
-    //CAMERA Z PROVIDER WITH KALMAN FILTER
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    
-    // camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(poly_fit_z->getPorts()[(int)PolyFilter::ports_id::IP_0_DATA]);
-    // poly_fit_z->getPorts()[(int)PolyFilter::ports_id::OP_1_FILT_DOT]->connect(probe8->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_1_POS]);
-    rotated_IMU_demux->getPorts()[Demux3D::ports_id::OP_2_DATA]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_0_ACC]);
-    //rosunit_reset_kalman->getPorts()[(int)ROSUnit_SetFloatSrv::ports_id::OP_0]->connect(camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::IP_2_RESET]);
-    
-    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    
-    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_0_POS]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-    camera_z_kalmanFilter->getPorts()[(int)KalmanFilter::ports_id::OP_1_VEL]->connect(mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
-
-    camera_pos_demux->getPorts()[(int)Demux3D::ports_id::OP_2_DATA]->connect(camera_z_dot->getPorts()[(int)Differentiator::ports_id::IP_0_DATA]);
-    //poly_fit_z->getPorts()[(int)PolyFilter::ports_id::OP_1_FILT_DOT]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_2_DATA]);
-    //camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::IP_0_DATA_DEFAULT]);
-    camera_z_dot->getPorts()[(int)Differentiator::ports_id::OP_0_DATA]->connect(probe2->getPorts()[(int)ROSUnit_FloatPub::ports_id::IP_0]);
-
-    mux_position_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_0_DATA]);
-    mux_velocity_switch_z->getPorts()[(int)InvertedSwitch::ports_id::OP_0_DATA]->connect(supress_vel_z->getPorts()[(int)SupressPeak::ports_id::IP_0_VEL]);
-    supress_vel_z->getPorts()[(int)SupressPeak::ports_id::OP_VEL_THRESHOLDED]->connect(mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::IP_1_DATA]);
-
-    //Rotated imu vector
-    myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_5_FREE_ACCELERATION]->connect(rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::IP_0_VEC]);
-    myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_0_ROLL]->connect(rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::IP_1_ROLL]);
-    myROSUnit_Xsens->getPorts()[(int)ROSUnit_IMU::ports_id::OP_1_PITCH]->connect(rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::IP_2_PITCH]);
-    wrap_around_yaw->getPorts()[(int)WrapAroundFunction::ports_id::OP_0_DATA]->connect(rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::IP_3_YAW]);
-    rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::OP_0_DATA]->connect(rotated_IMU_demux->getPorts()[Demux3D::ports_id::IP_0_DATA]);
-    //rotation_IMU->getPorts()[(int)InverseRotateVec::ports_id::OP_0_DATA]->connect(rosunit_rotation_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
   
     mux_provider_x->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(rosunit_x_provider_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
     mux_provider_y->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(rosunit_y_provider_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
@@ -257,11 +143,6 @@ int main(int argc, char **argv){
     mux_provider_pitch->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(rosunit_pitch_provider_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
     mux_provider_yaw->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(rosunit_yaw_provider_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
     mux_provider_yaw_rate->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(rosunit_yaw_rate_provider_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
-    
-    mux_camera_provider_x->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(rosunit_x_camera_provider_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
-    mux_camera_provider_z->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(rosunit_z_camera_provider_pub->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
-    mux_provider_kalman_x->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(probe3->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
-    mux_provider_kalman_z->getPorts()[(int)Mux3D::ports_id::OP_0_DATA]->connect(probe4->getPorts()[(int)ROSUnit_PointPub::ports_id::IP_0]);
 
 
     std::cout  << "###### PROVIDERS NODE ######" "\n";
