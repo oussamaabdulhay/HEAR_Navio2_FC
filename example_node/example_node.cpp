@@ -59,7 +59,7 @@
 
 
 const int PWM_FREQUENCY = 200;
-const float SATURATION_VALUE_XY = 0.2617/2.; 
+const float SATURATION_VALUE_XY = 0.2617; 
 const float SATURATION_VALUE_YAW = 0.2617;
 const float SATURATION_VALUE_YAWRATE = 0.3;
 
